@@ -50,7 +50,8 @@ def preparar_driver(diretorio_download, caminho_driver_chrome):
     webdriver_service = Service(
         r"D:\\Users\\erp93066\\python_login\\Executaveis\\robos_diarios\\chromedriver.exe"
     )
-    driver = webdriver.Chrome(service=webdriver_service, options=chrome_options)
+    driver = webdriver.Chrome(
+        service=webdriver_service, options=chrome_options)
     return driver
 
 
@@ -93,7 +94,8 @@ def baixar_arquivos(driver, data_inicial, data_final):
 
         # Definir a Data Inicial da consulta
         driver.find_element(By.NAME, "consultaDataInicial").clear()
-        driver.find_element(By.NAME, "consultaDataInicial").send_keys(data_inicial)
+        driver.find_element(
+            By.NAME, "consultaDataInicial").send_keys(data_inicial)
         WebDriverWait(driver, 3).until(
             EC.element_to_be_clickable((By.NAME, "consultaDataFinal"))
         ).clear()
@@ -172,13 +174,15 @@ def processar_arquivos(
 
     Arquivos_Baixados_rj = os.listdir(diretorio_empresa_RJ)
     Arquivos_Baixados_brasil = os.listdir(diretorio_empresa_Brasil)
-    Arquivos_Baixados_rj = [f for f in Arquivos_Baixados_rj if f.endswith(".xml")]
+    Arquivos_Baixados_rj = [
+        f for f in Arquivos_Baixados_rj if f.endswith(".xml")]
     Arquivos_Baixados_brasil = [
         f for f in Arquivos_Baixados_brasil if f.endswith(".xml")
     ]
 
     for arquivo_xml in Arquivos_Baixados_rj:
-        tree = ElementTree.parse(os.path.join(diretorio_empresa_RJ, arquivo_xml))
+        tree = ElementTree.parse(os.path.join(
+            diretorio_empresa_RJ, arquivo_xml))
         root = tree.getroot()
         substituir_data_emissao(root, arquivo_xml, diretorio_empresa_RJ, tree)
         mover_arquivos_com_base_no_valor(
@@ -186,9 +190,11 @@ def processar_arquivos(
         )
 
     for arquivo_xml in Arquivos_Baixados_brasil:
-        tree = ElementTree.parse(os.path.join(diretorio_empresa_Brasil, arquivo_xml))
+        tree = ElementTree.parse(os.path.join(
+            diretorio_empresa_Brasil, arquivo_xml))
         root = tree.getroot()
-        substituir_data_emissao(root, arquivo_xml, diretorio_empresa_Brasil, tree)
+        substituir_data_emissao(
+            root, arquivo_xml, diretorio_empresa_Brasil, tree)
         mover_arquivos_com_base_no_valor(
             root,
             arquivo_xml,
@@ -202,7 +208,8 @@ def mover_arquivos_com_base_no_valor(
     root, arquivo_xml, diretorio_extracao, diretorio_difal_RJ, diretorio_st_RJ
 ):
     IEST = root.find(".//{http://www.portalfiscal.inf.br/nfe}IEST")
-    VICMSUFDEST = root.find(".//{http://www.portalfiscal.inf.br/nfe}vICMSUFDest")
+    VICMSUFDEST = root.find(
+        ".//{http://www.portalfiscal.inf.br/nfe}vICMSUFDest")
     VST = root.find(".//{http://www.portalfiscal.inf.br/nfe}vST")
 
     if IEST is not None:
@@ -239,7 +246,8 @@ def extract_uf(xml_file):
 
 
 def rename_files_with_uf(directory):
-    xml_files = [file for file in os.listdir(directory) if file.endswith(".xml")]
+    xml_files = [file for file in os.listdir(
+        directory) if file.endswith(".xml")]
 
     for xml_file in xml_files:
         xml_path = os.path.join(directory, xml_file)
@@ -320,7 +328,8 @@ def principal(
     )
 
 
-dt_fim_texto = open("d:\\Users\\erp93066\\python_login\\Executaveis\\dia_fim.txt", "r")
+dt_fim_texto = open(
+    "d:\\Users\\erp93066\\python_login\\Executaveis\\dia_fim.txt", "r")
 dt_fim = dt_fim_texto.read()
 print(dt_fim)
 
@@ -368,4 +377,5 @@ for directory in rename:
         rename_files_with_uf(directory)
     else:
         print(f"Directory not found: {directory}")
-os.system(r"d:\\Users\\erp93066\\python_login\\Executaveis\\robos_diarios\\DIFAL_RJ.py")
+os.system(
+    r"d:\\Users\\erp93066\\python_login\\Executaveis\\robos_diarios\\DIFAL_RJ.py")
