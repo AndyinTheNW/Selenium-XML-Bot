@@ -329,7 +329,7 @@ dt_inicio_texto = open(
 )
 dt_inicio = dt_inicio_texto.read()
 print(dt_inicio)
-# Iniciando o processo
+
 if __name__ == "__main__":
     limpa_diretorios(
         "D:/Users/erp93066/python_login/downloads",
