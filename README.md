@@ -1,4 +1,6 @@
 # Robô  - Automação DFE
+### Observação:
+**Esse código é um fragmento de um projeto privado maior, onde as outras etapas do processo são privadas.**
 
 ## Descrição do Projeto
 Este projeto consiste em uma série de scripts Python para automatizar o processo de download, processamento e organização de arquivos XML e PDF. Os scripts usam bibliotecas como Tkinter, Selenium e Pdfminer para realizar tarefas de interface do usuário, automação de navegador da web e extração de texto de arquivos PDF, respectivamente.
