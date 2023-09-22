@@ -48,7 +48,7 @@ def preparar_driver(diretorio_download, caminho_driver_chrome):
     }
     chrome_options.add_experimental_option("prefs", prefs)
     webdriver_service = Service(
-        r"D:\\Users\\EDB93066\\python_login\\Executaveis\\robos_diarios\\chromedriver.exe"
+        r"D:\\Users\\erp93066\\python_login\\Executaveis\\robos_diarios\\chromedriver.exe"
     )
     driver = webdriver.Chrome(service=webdriver_service, options=chrome_options)
     return driver
@@ -65,8 +65,8 @@ def fazer_login(driver, url, nome_usuario, senha):
 
 def baixar_arquivos(driver, data_inicial, data_final):
     servidores = {
-        "Servidor_Epson_RJ": "/html/body/div[1]/div[2]/div[1]/ul[1]/li[2]/div/div[2]/div[2]/div[4]/div",
-        "Servidor_Epson_Brasil": "/html/body/div[1]/div[2]/div[1]/ul[1]/li[2]/div/div[2]/div[2]/div[2]/div",
+        "Servidor_empresa_RJ": "/html/body/div[1]/div[2]/div[1]/ul[1]/li[2]/div/div[2]/div[2]/div[4]/div",
+        "Servidor_empresa_Brasil": "/html/body/div[1]/div[2]/div[1]/ul[1]/li[2]/div/div[2]/div[2]/div[2]/div",
     }
 
     for nome_servidor, xpath_servidor in servidores.items():
@@ -137,10 +137,10 @@ def substituir_data_emissao(root, arquivo_xml, diretorio_extracao, tree):
 def processar_arquivos(
     diretorio_download,
     diretorio_extracao,
-    diretorio_Epson_RJ,
+    diretorio_empresa_RJ,
     diretorio_difal_RJ,
     diretorio_st_RJ,
-    diretorio_Epson_Brasil,
+    diretorio_empresa_Brasil,
     diretorio_difal_Brasil,
     diretorio_st_Brasil,
     diretorio_guias,
@@ -148,51 +148,51 @@ def processar_arquivos(
     os.makedirs(diretorio_download, exist_ok=True)
     os.makedirs(diretorio_guias, exist_ok=True)
     os.makedirs(diretorio_extracao, exist_ok=True)
-    os.makedirs(diretorio_Epson_RJ, exist_ok=True)
+    os.makedirs(diretorio_empresa_RJ, exist_ok=True)
     os.makedirs(diretorio_difal_RJ, exist_ok=True)
     os.makedirs(diretorio_st_RJ, exist_ok=True)
-    os.makedirs(diretorio_Epson_Brasil, exist_ok=True)
+    os.makedirs(diretorio_empresa_Brasil, exist_ok=True)
     os.makedirs(diretorio_difal_Brasil, exist_ok=True)
     os.makedirs(diretorio_st_Brasil, exist_ok=True)
 
     arquivos = os.listdir(diretorio_download)
     arquivos_zip = [f for f in arquivos if f.endswith(".zip")]
 
-    # REGRA: se o zip tiver (1) no final, extrai para o diretório "Epson_Brasil", caso contrário, extrai para o diretório "Epson_RJ"
+    # REGRA: se o zip tiver (1) no final, extrai para o diretório "empresa_Brasil", caso contrário, extrai para o diretório "empresa_RJ"
     for arquivo_zip in arquivos_zip:
         with zipfile.ZipFile(
             os.path.join(diretorio_download, arquivo_zip), "r"
         ) as zip_ref:
             if arquivo_zip.endswith("(1).zip"):
-                zip_ref.extractall(diretorio_Epson_Brasil)
+                zip_ref.extractall(diretorio_empresa_Brasil)
             else:
-                zip_ref.extractall(diretorio_Epson_RJ)
+                zip_ref.extractall(diretorio_empresa_RJ)
 
                 print(f"arquivos extraidos com sucesso")
 
-    Arquivos_Baixados_rj = os.listdir(diretorio_Epson_RJ)
-    Arquivos_Baixados_brasil = os.listdir(diretorio_Epson_Brasil)
+    Arquivos_Baixados_rj = os.listdir(diretorio_empresa_RJ)
+    Arquivos_Baixados_brasil = os.listdir(diretorio_empresa_Brasil)
     Arquivos_Baixados_rj = [f for f in Arquivos_Baixados_rj if f.endswith(".xml")]
     Arquivos_Baixados_brasil = [
         f for f in Arquivos_Baixados_brasil if f.endswith(".xml")
     ]
 
     for arquivo_xml in Arquivos_Baixados_rj:
-        tree = ElementTree.parse(os.path.join(diretorio_Epson_RJ, arquivo_xml))
+        tree = ElementTree.parse(os.path.join(diretorio_empresa_RJ, arquivo_xml))
         root = tree.getroot()
-        substituir_data_emissao(root, arquivo_xml, diretorio_Epson_RJ, tree)
+        substituir_data_emissao(root, arquivo_xml, diretorio_empresa_RJ, tree)
         mover_arquivos_com_base_no_valor(
-            root, arquivo_xml, diretorio_Epson_RJ, diretorio_difal_RJ, diretorio_st_RJ
+            root, arquivo_xml, diretorio_empresa_RJ, diretorio_difal_RJ, diretorio_st_RJ
         )
 
     for arquivo_xml in Arquivos_Baixados_brasil:
-        tree = ElementTree.parse(os.path.join(diretorio_Epson_Brasil, arquivo_xml))
+        tree = ElementTree.parse(os.path.join(diretorio_empresa_Brasil, arquivo_xml))
         root = tree.getroot()
-        substituir_data_emissao(root, arquivo_xml, diretorio_Epson_Brasil, tree)
+        substituir_data_emissao(root, arquivo_xml, diretorio_empresa_Brasil, tree)
         mover_arquivos_com_base_no_valor(
             root,
             arquivo_xml,
-            diretorio_Epson_Brasil,
+            diretorio_empresa_Brasil,
             diretorio_difal_Brasil,
             diretorio_st_Brasil,
         )
@@ -252,9 +252,9 @@ def rename_files_with_uf(directory):
             print(f"Renamed: {xml_file} -> {new_name}")
 
 
-def deleta_arquivos_por_uf(diretorio_Epson_RJ, diretorio_Epson_Brasil):
-    estados_para_descartar_Epson_RJ = ["RJ", "MG", "PR", "RS", "SC", "SP"]
-    estados_para_descartar_Epson_Brasil = [
+def deleta_arquivos_por_uf(diretorio_empresa_RJ, diretorio_empresa_Brasil):
+    estados_para_descartar_empresa_RJ = ["RJ", "MG", "PR", "RS", "SC", "SP"]
+    estados_para_descartar_empresa_Brasil = [
         "AM",
         "AP",
         "BA",
@@ -273,17 +273,17 @@ def deleta_arquivos_por_uf(diretorio_Epson_RJ, diretorio_Epson_Brasil):
         "SP",
     ]
 
-    for uf in estados_para_descartar_Epson_RJ:
-        for file in os.listdir(diretorio_Epson_RJ):
+    for uf in estados_para_descartar_empresa_RJ:
+        for file in os.listdir(diretorio_empresa_RJ):
             if file.endswith(".xml"):
                 if uf in file:
-                    os.remove(os.path.join(diretorio_Epson_RJ, file))
+                    os.remove(os.path.join(diretorio_empresa_RJ, file))
 
-    for uf in estados_para_descartar_Epson_Brasil:
-        for file in os.listdir(diretorio_Epson_Brasil):
+    for uf in estados_para_descartar_empresa_Brasil:
+        for file in os.listdir(diretorio_empresa_Brasil):
             if file.endswith(".xml"):
                 if uf in file:
-                    os.remove(os.path.join(diretorio_Epson_Brasil, file))
+                    os.remove(os.path.join(diretorio_empresa_Brasil, file))
 
 
 def principal(
@@ -293,10 +293,10 @@ def principal(
     nome_usuario,
     senha,
     diretorio_extracao,
-    diretorio_Epson_RJ,
+    diretorio_empresa_RJ,
     diretorio_difal_RJ,
     diretorio_st_RJ,
-    diretorio_Epson_Brasil,
+    diretorio_empresa_Brasil,
     diretorio_st_Brasil,
     diretorio_difal_Brasil,
     data_inicial,
@@ -310,56 +310,56 @@ def principal(
     processar_arquivos(
         diretorio_download,
         diretorio_extracao,
-        diretorio_Epson_RJ,
+        diretorio_empresa_RJ,
         diretorio_difal_RJ,
         diretorio_st_RJ,
-        diretorio_Epson_Brasil,
+        diretorio_empresa_Brasil,
         diretorio_difal_Brasil,
         diretorio_st_Brasil,
         diretorio_guias,
     )
 
 
-dt_fim_texto = open("d:\\Users\\EDB93066\\python_login\\Executaveis\\dia_fim.txt", "r")
+dt_fim_texto = open("d:\\Users\\erp93066\\python_login\\Executaveis\\dia_fim.txt", "r")
 dt_fim = dt_fim_texto.read()
 print(dt_fim)
 
 dt_inicio_texto = open(
-    "d:\\Users\\EDB93066\\python_login\\Executaveis\\dia_inic.txt", "r"
+    "d:\\Users\\erp93066\\python_login\\Executaveis\\dia_inic.txt", "r"
 )
 dt_inicio = dt_inicio_texto.read()
 print(dt_inicio)
 # Iniciando o processo
 if __name__ == "__main__":
     limpa_diretorios(
-        "D:/Users/EDB93066/python_login/downloads",
-        "D:/Users/EDB93066/python_login/Arquivos_Baixados",
-        "D:/Users/EDB93066/python_login/guias",
+        "D:/Users/erp93066/python_login/downloads",
+        "D:/Users/erp93066/python_login/Arquivos_Baixados",
+        "D:/Users/erp93066/python_login/guias",
     )
     principal(
-        diretorio_download=r"D:\Users\EDB93066\python_login\downloads",
-        caminho_driver_chrome="D:/Users/EDB93066/python_login/chromedriver-win64",
+        diretorio_download=r"D:\Users\erp93066\python_login\downloads",
+        caminho_driver_chrome="D:/Users/erp93066/python_login/chromedriver-win64",
         url="http://136.239.170.38:8080/portal/mvc/login",
         nome_usuario="robodw",
         senha="dwrobo",
-        diretorio_extracao="D:/Users/EDB93066/python_login/Arquivos_Baixados",
-        diretorio_Epson_Brasil="D:/Users/EDB93066/python_login/Arquivos_Baixados/Epson_Brasil",
-        diretorio_difal_Brasil="D:/Users/EDB93066/python_login/Arquivos_Baixados/Epson_Brasil/difal_Brasil",
-        diretorio_st_Brasil="D:/Users/EDB93066/python_login/Arquivos_Baixados/Epson_Brasil/st_Brasil",
-        diretorio_Epson_RJ="D:/Users/EDB93066/python_login/Arquivos_Baixados/Epson_RJ",
-        diretorio_difal_RJ="D:/Users/EDB93066/python_login/Arquivos_Baixados/Epson_RJ/difal_RJ",
-        diretorio_st_RJ="D:/Users/EDB93066/python_login/Arquivos_Baixados/Epson_RJ/st_RJ",
-        diretorio_guias="D:/Users/EDB93066/python_login/guias",
+        diretorio_extracao="D:/Users/erp93066/python_login/Arquivos_Baixados",
+        diretorio_empresa_Brasil="D:/Users/erp93066/python_login/Arquivos_Baixados/empresa_Brasil",
+        diretorio_difal_Brasil="D:/Users/erp93066/python_login/Arquivos_Baixados/empresa_Brasil/difal_Brasil",
+        diretorio_st_Brasil="D:/Users/erp93066/python_login/Arquivos_Baixados/empresa_Brasil/st_Brasil",
+        diretorio_empresa_RJ="D:/Users/erp93066/python_login/Arquivos_Baixados/empresa_RJ",
+        diretorio_difal_RJ="D:/Users/erp93066/python_login/Arquivos_Baixados/empresa_RJ/difal_RJ",
+        diretorio_st_RJ="D:/Users/erp93066/python_login/Arquivos_Baixados/empresa_RJ/st_RJ",
+        diretorio_guias="D:/Users/erp93066/python_login/guias",
         data_inicial=str(dt_inicio),
         data_final=str(dt_fim),
     )
 
 
 rename = [
-    r"D:\Users\EDB93066\python_login\Arquivos_Baixados\Epson_Brasil\st_Brasil",
-    r"D:\Users\EDB93066\python_login\Arquivos_Baixados\Epson_Brasil\difal_Brasil",
-    r"D:\Users\EDB93066\python_login\Arquivos_Baixados\Epson_RJ\st_RJ",
-    r"D:\Users\EDB93066\python_login\Arquivos_Baixados\Epson_RJ\difal_RJ",
+    r"D:\Users\erp93066\python_login\Arquivos_Baixados\empresa_Brasil\st_Brasil",
+    r"D:\Users\erp93066\python_login\Arquivos_Baixados\empresa_Brasil\difal_Brasil",
+    r"D:\Users\erp93066\python_login\Arquivos_Baixados\empresa_RJ\st_RJ",
+    r"D:\Users\erp93066\python_login\Arquivos_Baixados\empresa_RJ\difal_RJ",
 ]
 
 for directory in rename:
@@ -368,4 +368,4 @@ for directory in rename:
         rename_files_with_uf(directory)
     else:
         print(f"Directory not found: {directory}")
-os.system(r"d:\\Users\\EDB93066\\python_login\\Executaveis\\robos_diarios\\DIFAL_RJ.py")
+os.system(r"d:\\Users\\erp93066\\python_login\\Executaveis\\robos_diarios\\DIFAL_RJ.py")
